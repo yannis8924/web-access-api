@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API for webpage analysis and Xiaohongshu note extraction.
 servers:
-  - url: https://your-api-domain.com
+  - url: https://web-access-api-production.up.railway.app
 components:
   securitySchemes:
     bearerAuth:
