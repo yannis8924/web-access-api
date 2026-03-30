@@ -1,0 +1,127 @@
+openapi: 3.1.0
+info:
+  title: Web Access API
+  version: 1.0.0
+  description: API for webpage analysis and Xiaohongshu note extraction.
+servers:
+  - url: https://your-api-domain.com
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+  schemas:
+    AnalyzeRequest:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+          format: uri
+        focus:
+          type: string
+          enum: [structure, selling_points, conversion, assets]
+          default: structure
+        screenshot:
+          type: boolean
+          default: true
+        use_browser:
+          type: boolean
+          default: true
+    AnalyzeResponse:
+      type: object
+      properties:
+        url:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        analysis:
+          type: object
+        screenshot_url:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+    XhsResponse:
+      type: object
+      properties:
+        url:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
+        content:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        structure:
+          type: string
+        selling_points:
+          type: array
+          items:
+            type: string
+        conversion_logic:
+          type: string
+        screenshot_url:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+security:
+  - bearerAuth: []
+paths:
+  /health:
+    get:
+      operationId: healthCheck
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+  /analyze:
+    post:
+      operationId: analyzePage
+      summary: Analyze a web page
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyzeRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyzeResponse'
+  /xhs-note:
+    post:
+      operationId: analyzeXhsNote
+      summary: Analyze a Xiaohongshu note
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyzeRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/XhsResponse'
